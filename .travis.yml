@@ -10,6 +10,7 @@ before_install:
 
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install ordereddict; fi
+  - export GITHUB_USER=`echo $TRAVIS_REPO_SLUG | cut -d '/' -f 1`
   - mkdir ~/.pywikibot
 
   - touch ~/.pywikibot/user-config.py
@@ -28,7 +29,7 @@ install:
   - cd ../..
 
 script:
-  - python setup.py test
+  - if [ "$GITHUB_USER" = 'wikimedia' ]; then python setup.py test; else PYWIKIBOT2_NO_USER_CONFIG=1 nosetests -a '!site,!net' -v ; fi
 
 env:
   global:
